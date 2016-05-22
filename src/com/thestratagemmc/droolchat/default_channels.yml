@@ -1,0 +1,55 @@
+local:
+  type: LocalChannel
+  title: Local
+  description: Only players within 200 blocks can hear you.
+  nick: L
+  color: 7
+  message_color: 7
+  elements: ChannelNickElement,SenderDetailedElement,MessageElement
+  bots: true
+global:
+  type: PermissionsChannel
+  title: Global
+  description: Everyone can hear you.
+  nick: G
+  color: 9
+  message_color: 7
+  elements: ChannelNickElement,SenderDetailedElement,MessageElement
+  bots: true
+  speakPermission: droolchat.channels.default
+  listenPermission: droolchat.channels.default
+staff:
+  type: PermissionsChannel
+  title: Staff
+  description: Staff only.
+  nick: Staff
+  message_color: c
+  color: c
+  elements: ChannelNickElement,SenderDetailedElement,MessageElement
+  bots: true
+  speakPermission: droolchat.channels.staff
+  listenPermission: droolchat.channels.staff
+operator:
+  type: PermissionsChannel
+  title: Operator
+  description: Operator only.
+  nick: O
+  message_color: d
+  color: d
+  elements: ChannelNickElement,SenderDetailedElement,MessageElement
+  bots: true
+  speakPermission: droolchat.channels.operator
+  listenPermission: droolchat.channels.operator
+announcements:
+  type: PermissionsChannel
+  title: Announcement
+  description: Server announcements.
+  nick: Announce
+  message_color: e
+  color: 7
+  elements: ChannelNameElement,SenderDetailedElement,MessageElement
+  bots: true
+  speakPermission: droolchat.channels.announcement
+  listenPermission: droolchat.channels.default
+
+

@@ -1,0 +1,11 @@
+name: DroolChat
+author: akselm
+version: 1.0
+main: com.thestratagemmc.droolchat.DroolChat
+commands:
+  message:
+    alias: [msg,m,whisper,tell,t]
+  channel:
+    alias: [ch]
+  playerafk:
+    alias: [pafk]
