@@ -13,6 +13,12 @@ import java.util.HashMap;
 public abstract class Element {
     private ElementTheme defaultTheme; //cache
 
+    public Element(){
+        HashMap<String,ChatColor> map = new HashMap<>();
+        registerDefaultColors(map);
+        defaultTheme = new ElementTheme(map);
+    }
+
     public abstract TextComponent getComponent(ThemeUser user);
 
     public abstract void registerDefaultColors(HashMap<String,ChatColor> map);

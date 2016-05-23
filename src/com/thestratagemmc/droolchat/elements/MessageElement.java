@@ -16,6 +16,7 @@ public class MessageElement extends Element {
     String message;
 
     public MessageElement(Channel channel, String message) {
+        super();
         this.channel = channel;
         this.message = message;
     }

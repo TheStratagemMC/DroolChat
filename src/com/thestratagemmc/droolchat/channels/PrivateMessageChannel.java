@@ -4,6 +4,7 @@ import com.thestratagemmc.droolchat.Channel;
 import com.thestratagemmc.droolchat.ChatMessageSender;
 import com.thestratagemmc.droolchat.Element;
 import com.thestratagemmc.droolchat.elements.MsgDirectionalElement;
+import com.thestratagemmc.droolchat.senders.PlayerSender;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,8 +18,8 @@ import java.util.UUID;
  */
 public class PrivateMessageChannel extends Channel {
 
-    private UUID from= null;
-    private UUID to = null;
+    protected UUID from= null;
+    protected UUID to = null;
 
     public PrivateMessageChannel(){}
 
@@ -48,7 +49,7 @@ public class PrivateMessageChannel extends Channel {
         Player f = Bukkit.getPlayer(from);
         Player t = Bukkit.getPlayer(to);
 
-        if (f != null) f.spigot().sendMessage(getMessageToSend(sender, message, f));
+        if (f != null) f.spigot().sendMessage(getMessageToSend(new PlayerSender(t), message, f));
 
         if (t == null) {
             if (f != null) f.sendMessage(ChatColor.YELLOW +"Player is not found.");

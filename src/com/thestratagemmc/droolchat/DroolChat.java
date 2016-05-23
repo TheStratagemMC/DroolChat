@@ -26,12 +26,12 @@ public class DroolChat extends JavaPlugin {
     private BotStore botStore;
     private ChannelStore channelStore;
     private File channelDir;
-    private HashMap<UUID,Chatter> chatterMap = new HashMap<>();
+    private static HashMap<UUID,PlayerChatter> chatterMap = new HashMap<>();
 
     public void onEnable(){
         instance = this;
         botStore = new BotStore();
-
+        channelStore = new ChannelStore();
         File pDir = getDataFolder();
         if (!pDir.exists()) pDir.mkdir();
 
@@ -39,9 +39,10 @@ public class DroolChat extends JavaPlugin {
         if (!channelDir.exists()) {
             channelDir.mkdir();
             try{
-                BufferedReader reader = new BufferedReader(new InputStreamReader(getResource("default_channels.yml")));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/default_channels.yml")));
                 File def = new File(channelDir, "default_channels.yml");
                 def.createNewFile();
+                System.out.println(def.exists());
                 FileOutputStream fout = new FileOutputStream(def);
                 String line;
                 while ((line = reader.readLine()) != null){
@@ -98,7 +99,9 @@ public class DroolChat extends JavaPlugin {
         final ChannelCommand command = new ChannelCommand();
         getServer().getPluginManager().registerEvents(command, this);
         getCommand("channel").setExecutor(command);
-        getCommand("message").setExecutor(new MsgCommand());
+        final MsgCommand m = new MsgCommand();
+        getCommand("reply").setExecutor(m);
+        getCommand("message").setExecutor(m);
 
         registerBot(this, "ExampleBot", new ExampleBot());
     }
@@ -120,7 +123,10 @@ public class DroolChat extends JavaPlugin {
     }
 
     public static PlayerChatter getChatter(UUID id){
-        return null;
+      if (chatterMap.containsKey(id)) return chatterMap.get(id);
+        PlayerChatter chatter = new PlayerChatter(id);
+        chatterMap.put(id, chatter);
+        return chatter;
     }
 
     public BotStore getBotStore(){

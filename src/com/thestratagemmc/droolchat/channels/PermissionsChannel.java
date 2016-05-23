@@ -15,6 +15,10 @@ public class PermissionsChannel extends Channel {
     private String speakPermission = "droolchat.channels.default";
     private String listenPermission = "droolchat.channels.default";
 
+    public PermissionsChannel(){
+        speakPermission = "droolchat.channels.default";
+        listenPermission = "droolchat.channels.default";
+    }
     public Channel load(ConfigurationSection section){
         speakPermission = section.getString("speakPermission");
         listenPermission = section.getString("listenPermission");
@@ -26,6 +30,7 @@ public class PermissionsChannel extends Channel {
         if (origin != null){
             if (!origin.hasPermission(speakPermission)) {
                 origin.sendMessage(ChatColor.YELLOW + "No permissions to speak in "+this.getName());
+                return;
             }
         }
         for (Player player : Bukkit.getOnlinePlayers()){
@@ -36,10 +41,13 @@ public class PermissionsChannel extends Channel {
     }
 
     public boolean canSpeak(Player player){
+        if (speakPermission == null) return true;
         return player.hasPermission(speakPermission);
     }
 
     public boolean canListen(Player player){
+
+        if (listenPermission == null) return true;
         return player.hasPermission(listenPermission);
     }
 }

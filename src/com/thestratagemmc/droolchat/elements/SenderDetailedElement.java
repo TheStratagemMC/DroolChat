@@ -16,6 +16,7 @@ public class SenderDetailedElement extends Element {
     ChatMessageSender sender;
 
     public SenderDetailedElement(ChatMessageSender sender){
+        super();
         this.sender = sender;
     }
 

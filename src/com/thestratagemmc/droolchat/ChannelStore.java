@@ -1,5 +1,7 @@
 package com.thestratagemmc.droolchat;
 
+import org.bukkit.Bukkit;
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -12,14 +14,20 @@ public class ChannelStore {
 
     public void registerChannel(Channel channel){
         channelMap.put(channel.getName(), channel);
-        shortcutMap.put(channel.getName(), channel.getName());
-        shortcutMap.put(channel.getNick(),channel.getName());
+        shortcutMap.put(channel.getName().toLowerCase(), channel.getName());
+        shortcutMap.put(channel.getNick().toLowerCase(),channel.getName());
     }
 
     public Channel getChannel(String input){
-        String lc = input.toLowerCase();
-        if (shortcutMap.containsKey(lc)) return channelMap.get(shortcutMap.get(lc));
-        if (channelMap.containsKey(lc)) return channelMap.get(lc);
+
+        for (String key : shortcutMap.keySet()){
+           // Bukkit.broadcastMessage(key);
+            if (input.equalsIgnoreCase(key)){
+                Channel c = channelMap.get(shortcutMap.get(key));
+                //Bukkit.broadcastMessage(""+(c== null));
+                return c;
+            }
+        }
         return null;
     }
 

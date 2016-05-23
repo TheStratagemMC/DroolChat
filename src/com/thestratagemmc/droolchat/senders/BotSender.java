@@ -2,6 +2,9 @@ package com.thestratagemmc.droolchat.senders;
 
 import com.thestratagemmc.droolchat.ChatMessageSender;
 import com.thestratagemmc.droolchat.bot.Bot;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 /**
@@ -15,6 +18,11 @@ public class BotSender implements ChatMessageSender {
     }
     @Override
     public TextComponent getComponent() {
-        return null;
+        TextComponent tc = new TextComponent(bot.getInfo().color + bot.getInfo().name);
+        ComponentBuilder bc = new ComponentBuilder("Bot: "+bot.getInfo().name +"\n");
+        bc.append(ChatColor.AQUA+"Description: "+bot.getInfo().description +ChatColor.RESET+"\n");
+        bc.append(ChatColor.AQUA +"Version: "+bot.getInfo().version+ChatColor.RESET+"\n");
+        tc.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, bc.create()));
+        return tc;
     }
 }

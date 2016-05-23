@@ -16,6 +16,7 @@ import java.util.HashMap;
 public class ChannelNameElement extends Element {
     Channel channel;
     public ChannelNameElement(Channel channel){
+        super();
         this.channel = channel;
     }
 
@@ -34,7 +35,7 @@ public class ChannelNameElement extends Element {
 
         ComponentBuilder b = new ComponentBuilder(getColor(user, "hover_primary")+ChatColor.BOLD.toString() +"Channel: "+channel.getColor()+channel.getName());
         b.append(ChatColor.RESET+"\n");
-        b.append(getColor(user, "hover_secondary")+"Players: "+ getColor(user,"hover_bg")+channel.getSize()+"");
+        //b.append(getColor(user, "hover_secondary")+"Players: "+ getColor(user,"hover_bg")+channel.getSize()+"");
         b.append(ChatColor.RESET+"\n");
         b.append(getColor(user, "hover_secondary")+"Is moderated: "+getColor(user,"hover_bg")+channel.isModerated());
         b.append(ChatColor.RESET+"\n");

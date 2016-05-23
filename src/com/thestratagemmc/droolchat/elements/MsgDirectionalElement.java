@@ -16,6 +16,7 @@ public class MsgDirectionalElement extends Element {
     Channel channel;
     String word;
     public MsgDirectionalElement(Channel channel, String directionalWord){
+        super();
         this.channel = channel;
         this.word = directionalWord;
     }

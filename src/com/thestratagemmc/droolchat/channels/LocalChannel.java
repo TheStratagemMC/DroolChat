@@ -12,9 +12,13 @@ public class LocalChannel extends PermissionsChannel {
 
     @Override
     public void sendMessage(ChatMessageSender sender, String message, Player origin) {
-        if (origin == null) return;
+        if (origin == null){
+           // Bukkit.broadcastMessage(":(");
+            return;
+        }
         for (Player player : Bukkit.getOnlinePlayers()){
-            if (canListen(player) && origin.getLocation().distance(player.getLocation()) < distance){
+            if (!player.getWorld().getName().equals(origin.getWorld().getName())) continue;
+            if (origin.getLocation().distance(player.getLocation()) < distance){
                 player.spigot().sendMessage(getMessageToSend(sender, message, player));
             }
         }

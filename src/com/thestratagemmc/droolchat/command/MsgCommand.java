@@ -6,6 +6,7 @@ import com.thestratagemmc.droolchat.DroolChat;
 import com.thestratagemmc.droolchat.PlayerChatter;
 import com.thestratagemmc.droolchat.bot.*;
 import com.thestratagemmc.droolchat.channels.BotPrivateMessageChannel;
+import com.thestratagemmc.droolchat.channels.PMFactory;
 import com.thestratagemmc.droolchat.channels.PrivateMessageChannel;
 import com.thestratagemmc.droolchat.senders.BotSender;
 import com.thestratagemmc.droolchat.senders.ConsoleSender;
@@ -30,6 +31,7 @@ public class MsgCommand implements CommandExecutor {
     private HashMap<UUID,PrivateMessageChannel> nullChannelCache = new HashMap<>();
     private HashMap<UUID,BotPrivateMessageChannel> botChannelCache = new HashMap<>();
 
+    private HashMap<UUID,UUID> lastConversation = new HashMap<>();
     private PrivateMessageChannel newChannel(UUID id){
         if (nullChannelCache.containsKey(id)) return nullChannelCache.get(id);
         PrivateMessageChannel channel = new PrivateMessageChannel(null, id);
@@ -39,12 +41,24 @@ public class MsgCommand implements CommandExecutor {
 
     private BotPrivateMessageChannel botChannel(Player player){
         if (botChannelCache.containsKey(player.getUniqueId())) return botChannelCache.get(player.getUniqueId());
-        BotPrivateMessageChannel channel = new BotPrivateMessageChannel(player);
+        BotPrivateMessageChannel channel = PMFactory.getBotChannel(player);
         botChannelCache.put(player.getUniqueId(), channel);
         return channel;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("reply")){
+            if (!(sender instanceof Player)) return false;
+            Player p = (Player)sender;
+            if (!lastConversation.containsKey(p.getUniqueId())){
+                p.sendMessage(ChatColor.YELLOW + "No one has chatted you.");
+                return true;
+            }
+
+            Player to = Bukkit.getPlayer(lastConversation.get(p.getUniqueId()));
+            p.performCommand("message "+to.getName()+" "+Joiner.on( " ").join(args));
+            return true;
+        }
         ChatMessageSender cm;
         boolean cachedChannels = false;
         boolean isBot = false;
@@ -84,10 +98,11 @@ public class MsgCommand implements CommandExecutor {
 
         PrivateMessageChannel pm;
         if (isBot){
-            if (cachedChannels) {
+
                 final Player player = (Player)sender;
                 final Bot bot = DroolChat.getBot(args[0]);
                 final String message = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length));
+                botChannel(player).sendMessage(new PlayerSender(player), message, player, bot);
                 new BotResponse(new BotCall() {
                     @Override
                     public String call() {
@@ -99,14 +114,14 @@ public class MsgCommand implements CommandExecutor {
                         botChannel(player).sendMessage(new BotSender(bot), response, player);
                     }
                 });
-            }
+            return true;
         }
         if (cachedChannels){
             PlayerChatter chatter = DroolChat.getChatter(p.getUniqueId());
             pm = chatter.getPrivateMessageChannel(to.getUniqueId());
         }
         else pm = newChannel(to.getUniqueId());
-
+        lastConversation.put(to.getUniqueId(), p.getUniqueId());
         String message = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length));
 
         pm.sendMessage(cm, message, null);

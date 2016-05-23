@@ -1,6 +1,7 @@
 package com.thestratagemmc.droolchat;
 
 import com.google.common.io.Files;
+import com.thestratagemmc.droolchat.channels.PMFactory;
 import com.thestratagemmc.droolchat.channels.PrivateMessageChannel;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by 18AxMoreen on 5/21/2016.
  */
-public class PlayerChatter {
+public class PlayerChatter implements Chatter {
     static HashMap<UUID,ThemeUser> themeUsers = new HashMap<>();
 
     public static void loadThemeUsers(File file) throws Exception{
@@ -35,7 +36,7 @@ public class PlayerChatter {
 
     public PrivateMessageChannel getPrivateMessageChannel(UUID id){
         if (messageChannels.containsKey(id)) return messageChannels.get(id);
-        PrivateMessageChannel pm = new PrivateMessageChannel(player, id);
+        PrivateMessageChannel pm = PMFactory.getChannel(id, player);
         messageChannels.put(id, pm);
         return pm;
     }

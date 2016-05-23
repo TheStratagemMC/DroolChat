@@ -44,7 +44,7 @@ public class Channel {
     String nick = "d";
     boolean moderated = true;
     ChatColor color;
-    ArrayList<Class<? extends Element>> elementOrder = new ArrayList<Class<? extends Element>>(Arrays.asList(ChannelNameElement.class, SenderDetailedElement.class, MessageElement.class));
+    protected ArrayList<Class<? extends Element>> elementOrder = new ArrayList<Class<? extends Element>>(Arrays.asList(ChannelNameElement.class, SenderDetailedElement.class, MessageElement.class));
     Set<UUID> playersInChannel = new HashSet<>();
 
     public Channel(){
@@ -80,6 +80,7 @@ public class Channel {
             loadElements(Arrays.asList(string.split(",")));
         }
         if (section.contains("bots")) this.botsAllowed = section.getBoolean("bots");
+        if (section.contains("moderated")) this.moderated = section.getBoolean("moderated");
         return this;
     }
 
@@ -108,7 +109,9 @@ origin may be null unless its a LocalChannel
         output.addExtra(instantiate(elementOrder.get(0), sender, message, player).getComponent(user));
         for (int i = 1; i < elementOrder.size(); i++){
             output.addExtra(" ");
-            output.addExtra(instantiate(elementOrder.get(i), sender, message, player).getComponent(user));
+            Element el = instantiate(elementOrder.get(i), sender, message, player);
+           // Bukkit.broadcastMessage(el.getClass().getName());
+            output.addExtra(el.getComponent(user));
         }
         return output;
     }

@@ -13,7 +13,9 @@ public class BotStore {
     HashMap<String,Bot> botMap = new HashMap<>();
 
     public Bot getBot(String name){
-        if (botMap.containsKey(name)) return botMap.get(name);
+        for (String key : botMap.keySet()){
+            if (key.equalsIgnoreCase(name)) return botMap.get(key);
+        }
         return null;
     }
     public void registerBot(Plugin plugin, String name, Bot bot){
@@ -21,7 +23,10 @@ public class BotStore {
         Bukkit.getPluginManager().registerEvents(bot, plugin);
     }
     public boolean isBot(String name){
-        return botMap.containsKey(name);
+        for (String key : botMap.keySet()){
+            if (key.equalsIgnoreCase(name)) return true;
+        }
+        return false;
     }
 
 }

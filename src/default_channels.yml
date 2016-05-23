@@ -7,6 +7,8 @@ local:
   message_color: 7
   elements: ChannelNickElement,SenderDetailedElement,MessageElement
   bots: true
+  speakPermission: droolchat.channels.default
+  listenPermission: droolchat.channels.default
 global:
   type: PermissionsChannel
   title: Global
@@ -51,5 +53,3 @@ announcements:
   bots: true
   speakPermission: droolchat.channels.announcement
   listenPermission: droolchat.channels.default
-
-

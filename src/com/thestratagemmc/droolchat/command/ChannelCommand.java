@@ -6,6 +6,7 @@ import com.thestratagemmc.droolchat.elements.ChannelNameElement;
 import com.thestratagemmc.droolchat.senders.ConsoleSender;
 import com.thestratagemmc.droolchat.senders.PlayerSender;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,6 +43,7 @@ public class ChannelCommand implements CommandExecutor, Listener {
             if (player) p = (Player)sender;
             Set<TextComponent> output = new HashSet<>();
             for (Channel channel : DroolChat.getInstance().getChannelStore().getChannels()){
+               // Bukkit.broadcastMessage(channel.getName());
                 if (player) if (channel.canListen(p)) output.add(new ChannelNameElement(channel).getComponent(ThemeUserDb.getThemeUser(p)));
                 else if (bypass) output.add(new ChannelNameElement(channel).getComponent(new ThemeUser(null, null)));
             }
@@ -98,7 +100,17 @@ public class ChannelCommand implements CommandExecutor, Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event){
-        onCommand(new ServerCommandEvent(event.getPlayer(), event.getMessage()));
+     //  Bukkit.broadcastMessage(event.getMessage());
+        String real = (event.getMessage().contains("/") ? event.getMessage().substring(1) : event.getMessage());
+        String[] args = real.split(" ");
+       // Bukkit.broadcastMessage(args[0]);
+        Channel channel = DroolChat.getInstance().getChannelStore().getChannel(args[0]);
+        if (channel == null) return;
+        //Bukkit.broadcastMessage("vvvvv");
+        boolean player =  true;
+        Player p =event.getPlayer();
+        ChatBus.sendChatMessage(channel, (player) ? new PlayerSender(p) : new ConsoleSender(), Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length)), p);
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -107,17 +119,20 @@ public class ChannelCommand implements CommandExecutor, Listener {
             Channel channel = DroolChat.getInstance().getChannelStore().getChannel(focus.get(event.getPlayer().getUniqueId()));
             if (channel != null) {
                 ChatBus.sendChatMessage(channel, new PlayerSender(event.getPlayer()), event.getMessage(), event.getPlayer());
+                event.setCancelled(true);
                 return;
             }
         }
         Channel channel = DroolChat.getInstance().getChannelStore().getChannel("global"); //ehhhh about hard coding it in
         if (channel != null) {
             ChatBus.sendChatMessage(channel, new PlayerSender(event.getPlayer()), event.getMessage(), event.getPlayer());
+            event.setCancelled(true);
             return;
         }
         channel = DroolChat.getInstance().getChannelStore().getChannel("local"); //ehhhh about hard coding it in
         if (channel != null) {
             ChatBus.sendChatMessage(channel, new PlayerSender(event.getPlayer()), event.getMessage(), event.getPlayer());
+            event.setCancelled(true);
             return;
         }
     }

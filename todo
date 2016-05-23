@@ -1,9 +1,3 @@
-// command:
- // - /ch - switch channels
- // shortcuts
-
-//local channel
-// user themes
- // bot events system & anti-bot-spam
-// API for player hover
-
+fix PMing bots
+make it so you can lock PMs
+fix it saying [Global] instead of [G]
